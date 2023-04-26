@@ -4,9 +4,9 @@ import com.nikita.library.model.Book;
 import com.nikita.library.model.User;
 import com.nikita.library.repository.BookRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -32,11 +32,11 @@ public class BookService {
         this.bookRepository = bookRepository;
         this.userService = userService;
     }
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Optional<Book> findById(Integer id) {
         return bookRepository.findById(id);
     }
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<Book> findAll() {
         return bookRepository.findAll();
     }
@@ -49,7 +49,7 @@ public class BookService {
         Optional<Book> byId = bookRepository.findById(id);
         Optional<User> userById = userService.findUserById(userId);
         if (byId.isEmpty()|userById.isEmpty()) {
-            System.out.println("Нет книги или пользовател");
+            logger.log(Level.INFO, "Нет книги или пользователя");
         }
         Book book = byId.get();
         User user = userById.get();
@@ -62,7 +62,7 @@ public class BookService {
 
 
 
-    @Scheduled(fixedRate = 600000L)
+    @Scheduled(fixedRate = 600000000L)
     public void checkDateToReturn() {
         List<Book> books = bookRepository.findAll();
         Iterator<Book> iterator = books.iterator();
@@ -88,7 +88,7 @@ public class BookService {
     public Book back(Integer id) {
         Optional<Book> byId = bookRepository.findById(id);
         if (byId.isEmpty()) {
-            System.out.println("Нет книги");
+            logger.log(Level.INFO, "Нет книги");
         }
         Book book = byId.get();
         book.setUser(null);

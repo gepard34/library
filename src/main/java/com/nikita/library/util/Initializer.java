@@ -40,6 +40,12 @@ public class Initializer implements CommandLineRunner {
                 .name("Geroi nashego vremeni")
                 .isAvailable(true)
                 .build();
+        Book book4 = Book.builder()
+                .author("Булгаков")
+                .year(1987)
+                .name("Мастер и маргарита")
+                .isAvailable(true)
+                .build();
         User user = User.builder()
                 .firstName("Ivan")
                 .lastName("Ivanov")
