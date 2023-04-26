@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - "/Users/nikitagrakov:/var/lib/postgresql/data"
+    restart: always
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+        db-url: jdbc:postgresql://postgres:5433/postgres
+        db-username: postgres
+        db-password: root
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    restart: on-failure
+volumes:
+  db-data:
